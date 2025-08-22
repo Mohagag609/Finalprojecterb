@@ -15,10 +15,22 @@ export async function GET(req: Request) {
     balances.set(key, (balances.get(key) || 0) + val);
   }
   const accounts = await prisma.account.findMany();
-  const grouped = { asset: 0, liability: 0, equity: 0 } as Record<string, number>;
+  const grouped: { asset: number; liability: number; equity: number } = { asset: 0, liability: 0, equity: 0 };
   for (const acc of accounts) {
-    const bal = balances.get(acc.id) || 0;
-    if (acc.type in grouped) grouped[acc.type] += bal;
+    const bal = balances.get(acc.id) ?? 0;
+    switch (acc.type) {
+      case 'asset':
+        grouped.asset += bal;
+        break;
+      case 'liability':
+        grouped.liability += bal;
+        break;
+      case 'equity':
+        grouped.equity += bal;
+        break;
+      default:
+        break;
+    }
   }
   return NextResponse.json({ ...grouped, assetsEqualsLiabilitiesPlusEquity: Math.abs(grouped.asset - (grouped.liability + grouped.equity)) < 0.01 });
 }
