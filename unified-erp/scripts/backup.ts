@@ -1,4 +1,4 @@
-import { runDailyBackup } from '@/lib/backup';
+import { runDailyBackup } from '../lib/backup';
 
 (async () => {
   const res = await runDailyBackup();
