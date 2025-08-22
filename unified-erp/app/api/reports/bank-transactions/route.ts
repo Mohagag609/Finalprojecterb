@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { buildExcel } from '@/lib/excel';
+import type { BankImport } from '@prisma/client';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -15,7 +16,7 @@ export async function GET(req: Request) {
   });
 
   const headers = ['التاريخ', 'المبلغ', 'النوع', 'مرجع', 'البنك', 'الوصف', 'مرحل'];
-  const rows = items.map((b) => [
+  const rows = items.map((b: BankImport) => [
     new Date(b.date),
     Number(b.amount),
     b.type,
