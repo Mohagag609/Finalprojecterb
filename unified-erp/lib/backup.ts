@@ -40,3 +40,12 @@ export async function restoreFromBackup(_idOrPath: string) {
   // Stub restore; should run psql with file
   return true;
 }
+
+export async function ensureDailyBackup() {
+  const today = new Date();
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  const existing = await prisma.backup.findFirst({ where: { runAt: { gte: start, lt: end }, status: 'ok' } });
+  if (existing) return existing;
+  return await runDailyBackup();
+}
