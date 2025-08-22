@@ -16,7 +16,8 @@
     "seed": "tsx prisma/seed.ts",
     "test": "vitest run",
     "prepare": "husky install",
-    "backup:run": "tsx scripts/backup.ts | cat"
+    "backup:run": "tsx scripts/backup.ts | cat",
+    "postinstall": "prisma generate"
   },
   "engines": {
     "node": ">=18.18.0"
