@@ -30,7 +30,7 @@
     "exceljs": "^4.4.0",
     "lucide-react": "^0.460.0",
     "next": "^14.2.5",
-    "next-auth": "^5.0.0",
+    "next-auth": "beta",
     "pdfmake": "^0.2.12",
     "postcss": "^8.4.41",
     "react": "^18.3.1",
