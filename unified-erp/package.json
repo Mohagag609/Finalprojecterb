@@ -16,7 +16,7 @@
     "seed": "tsx prisma/seed.ts",
     "test": "vitest run",
     "prepare": "husky install",
-    "backup:run": "tsx app/api/backups/run/route.ts | cat"
+    "backup:run": "tsx scripts/backup.ts | cat"
   },
   "engines": {
     "node": ">=18.18.0"
