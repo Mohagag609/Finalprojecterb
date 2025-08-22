@@ -1,0 +1,61 @@
+{
+  "name": "unified-erp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "seed": "tsx prisma/seed.ts",
+    "test": "vitest run",
+    "prepare": "husky install",
+    "backup:run": "tsx app/api/backups/run/route.ts | cat"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "@tanstack/react-table": "^8.20.5",
+    "autoprefixer": "^10.4.20",
+    "bcryptjs": "^2.4.3",
+    "dayjs": "^1.11.13",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^0.460.0",
+    "next": "^14.2.5",
+    "next-auth": "^5.0.0",
+    "pdfmake": "^0.2.12",
+    "postcss": "^8.4.41",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.10",
+    "zod": "^3.23.8",
+    "decimal.js-light": "^2.5.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.5.4",
+    "eslint": "^9.9.0",
+    "eslint-config-next": "^14.2.5",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.9",
+    "prettier": "^3.3.3",
+    "prisma": "^5.18.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,md,css}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  }
+}
