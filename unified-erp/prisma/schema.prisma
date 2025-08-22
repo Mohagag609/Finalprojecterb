@@ -137,9 +137,11 @@ model Client {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  contracts   Contract[]
-  invoices    Invoice[]
+  contracts    Contract[]
+  invoices     Invoice[]
   journalLines JournalLine[]
+  vouchers     Voucher[]
+  projects     Project[]
 }
 
 model Supplier {
@@ -151,6 +153,7 @@ model Supplier {
 
   invoices     Invoice[]
   journalLines JournalLine[]
+  vouchers     Voucher[]
 }
 
 model Contractor {
@@ -162,6 +165,7 @@ model Contractor {
 
   invoices     Invoice[]
   journalLines JournalLine[]
+  vouchers     Voucher[]
 }
 
 model Partner {
@@ -170,9 +174,10 @@ model Partner {
   phone  String?
   note   String?
 
-  projects ProjectPartner[]
-  vouchers Voucher[]
+  projects  ProjectPartner[]
+  vouchers  Voucher[]
   journalLines JournalLine[]
+  returns   Return[]
 }
 
 // Real Estate
@@ -188,14 +193,15 @@ model Project {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  client   Client? @relation(fields: [clientId], references: [id])
-  units    Unit[]
-  journal  JournalEntry[]
-  invoices Invoice[]
-  phases   Phase[]
+  client    Client? @relation(fields: [clientId], references: [id])
+  units     Unit[]
+  journal   JournalEntry[]
+  invoices  Invoice[]
+  phases    Phase[]
   materials MaterialMove[]
   cashboxes Cashbox[]
   partners  ProjectPartner[]
+  vouchers  Voucher[]
 }
 
 model Unit {
@@ -223,7 +229,7 @@ model Unit {
 model Contract {
   id          String   @id @default(cuid())
   clientId    String
-  unitId      String
+  unitId      String   @unique
   startDate   DateTime
   totalAmount Decimal  @db.Decimal(18,2)
   downPayment Decimal  @db.Decimal(18,2)
@@ -239,16 +245,16 @@ model Contract {
 }
 
 model Installment {
-  id        String             @id @default(cuid())
+  id        String   @id @default(cuid())
   contractId String
-  amount    Decimal            @db.Decimal(18,2)
+  amount    Decimal  @db.Decimal(18,2)
   dueDate   DateTime
   status    InstallmentStatus  @default(PENDING)
   paidAt    DateTime?
-  matchedBankImportId String?
+  matchedBankImportId String? @unique
 
-  contract Contract @relation(fields: [contractId], references: [id])
-  matchedBankImport BankImport? @relation(fields: [matchedBankImportId], references: [id])
+  contract Contract   @relation(fields: [contractId], references: [id])
+  matchedBankImport BankImport?
 }
 
 model Return {
@@ -258,10 +264,10 @@ model Return {
   complementPartnerId String?
   complementDate      DateTime?
   complementAmount    Decimal? @db.Decimal(18,2)
-  resaleStatus        String   // pending | resold
+  resaleStatus        String
   createdAt           DateTime @default(now())
 
-  unit     Unit    @relation(fields: [unitId], references: [id])
+  unit     Unit     @relation(fields: [unitId], references: [id])
   partner  Partner? @relation(fields: [complementPartnerId], references: [id])
 }
 
@@ -275,7 +281,7 @@ model ProjectPartner {
 
   project Project @relation(fields: [projectId], references: [id])
   partner Partner @relation(fields: [partnerId], references: [id])
-  wallet  Account @relation(fields: [walletAccountId], references: [id])
+  wallet  Account @relation("WalletAccount", fields: [walletAccountId], references: [id])
 
   @@index([projectId, partnerId])
   @@unique([projectId, partnerId])
@@ -293,7 +299,11 @@ model Account {
   parent   Account? @relation("AccountToChildren", fields: [parentAccountId], references: [id])
   children Account[] @relation("AccountToChildren")
 
-  journalLines JournalLine[]
+  // Back relations (named) from other models
+  journalLines JournalLine[] @relation("JournalLineAccount")
+  invoiceLines InvoiceLine[] @relation("InvoiceLineAccount")
+  cashboxes    Cashbox[]     @relation("CashboxAccount")
+  walletOf     ProjectPartner[] @relation("WalletAccount")
 }
 
 model Cashbox {
@@ -305,9 +315,12 @@ model Cashbox {
   branch    String?
 
   project Project? @relation(fields: [projectId], references: [id])
-  account Account  @relation(fields: [accountId], references: [id])
+  account Account  @relation("CashboxAccount", fields: [accountId], references: [id])
 
-  vouchers Voucher[]
+  vouchers     Voucher[]
+  journalLines JournalLine[]
+  transfersFrom Transfer[] @relation("FromCashbox")
+  transfersTo   Transfer[] @relation("ToCashbox")
 
   @@index([projectId])
   @@map("cashboxes")
@@ -351,7 +364,7 @@ model JournalLine {
   materialId   String?
 
   entry      JournalEntry @relation(fields: [entryId], references: [id])
-  account    Account      @relation(fields: [accountId], references: [id])
+  account    Account      @relation("JournalLineAccount", fields: [accountId], references: [id])
   cashbox    Cashbox?     @relation(fields: [cashboxId], references: [id])
   client     Client?      @relation(fields: [clientId], references: [id])
   supplier   Supplier?    @relation(fields: [supplierId], references: [id])
@@ -384,6 +397,7 @@ model Invoice {
   supplier   Supplier?  @relation(fields: [supplierId], references: [id])
   contractor Contractor? @relation(fields: [contractorId], references: [id])
   lines      InvoiceLine[]
+  journalLines JournalLine[]
 
   @@index([projectId, type, date, status], map: "invoices_idx")
   @@map("invoices")
@@ -398,14 +412,14 @@ model InvoiceLine {
   unitPrice   Decimal @db.Decimal(18,2)
   accountId   String
 
-  invoice Invoice @relation(fields: [invoiceId], references: [id])
+  invoice  Invoice  @relation(fields: [invoiceId], references: [id])
   material Material? @relation(fields: [materialId], references: [id])
-  account Account @relation(fields: [accountId], references: [id])
+  account  Account  @relation("InvoiceLineAccount", fields: [accountId], references: [id])
 }
 
 model Voucher {
   id           String   @id @default(cuid())
-  kind         String   // receipt | payment
+  kind         String
   date         DateTime
   cashboxId    String
   projectId    String?
@@ -440,14 +454,13 @@ model BankImport {
   id          String   @id @default(cuid())
   date        DateTime
   amount      Decimal  @db.Decimal(18,2)
-  type        String   // debit | credit
+  type        String
   reference   String?
   bankName    String?
   description String?
   posted      Boolean  @default(false)
-  matchedInstallmentId String?
 
-  matchedInstallment Installment? @relation(fields: [matchedInstallmentId], references: [id])
+  matchedInstallment Installment?
 
   @@map("bank_imports")
 }
@@ -463,6 +476,7 @@ model Phase {
 
   project Project @relation(fields: [projectId], references: [id])
   materialMoves MaterialMove[]
+  journalLines  JournalLine[]
 }
 
 model Material {
@@ -471,7 +485,9 @@ model Material {
   unit            String
   defaultUnitCost Decimal? @db.Decimal(18,2)
 
-  moves MaterialMove[]
+  moves        MaterialMove[]
+  journalLines JournalLine[]
+  invoiceLines InvoiceLine[]
 }
 
 model MaterialMove {
