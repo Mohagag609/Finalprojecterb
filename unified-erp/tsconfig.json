@@ -22,7 +22,7 @@
       "@/services/*": ["services/*"],
       "@/hooks/*": ["hooks/*"]
     },
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "react", "react-dom", "node"]
   },
   "include": [
     "next-env.d.ts",
