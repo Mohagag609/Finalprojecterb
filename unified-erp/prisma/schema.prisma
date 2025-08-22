@@ -85,12 +85,12 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  accounts Account[]
+  accounts AuthAccount[]
   sessions Session[]
   AuditLog  AuditLog[] @relation("UserToAuditLog")
 }
 
-model Account {
+model AuthAccount {
   id                String  @id @default(cuid())
   userId            String
   type              String
