@@ -254,7 +254,7 @@ model Installment {
   matchedBankImportId String? @unique
 
   contract Contract   @relation(fields: [contractId], references: [id])
-  matchedBankImport BankImport?
+  matchedBankImport BankImport? @relation("InstallmentBankImport", fields: [matchedBankImportId], references: [id])
 }
 
 model Return {
@@ -460,7 +460,7 @@ model BankImport {
   description String?
   posted      Boolean  @default(false)
 
-  matchedInstallment Installment?
+  matchedInstallment Installment? @relation("InstallmentBankImport")
 
   @@map("bank_imports")
 }
