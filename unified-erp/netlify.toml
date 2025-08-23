@@ -1,0 +1,18 @@
+[build]
+  base = "unified-erp"
+  command = "npm ci && npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18.20.0"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@prisma/client", "prisma"]
+  included_files = [
+    "unified-erp/prisma/**",
+    "unified-erp/node_modules/.prisma/client/**"
+  ]
