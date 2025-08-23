@@ -1,6 +1,6 @@
 [build]
   base = "unified-erp"
-  command = "npm ci && npm run build"
+  command = "npm install --no-audit --no-fund && npm run build"
   publish = ".next"
 
 [build.environment]

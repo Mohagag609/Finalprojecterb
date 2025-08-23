@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "preserve",
@@ -16,18 +20,42 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/app/*": ["app/*"],
-      "@/components/*": ["components/*"],
-      "@/lib/*": ["lib/*"],
-      "@/services/*": ["services/*"],
-      "@/hooks/*": ["hooks/*"]
+      "@/app/*": [
+        "app/*"
+      ],
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/lib/*": [
+        "lib/*"
+      ],
+      "@/services/*": [
+        "services/*"
+      ],
+      "@/hooks/*": [
+        "hooks/*"
+      ]
     },
-    "types": ["vitest/globals", "react", "react-dom", "node"]
+    "types": [
+      "vitest/globals",
+      "react",
+      "react-dom",
+      "node"
+    ],
+    "noEmit": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
