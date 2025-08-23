@@ -17,7 +17,7 @@
     "test": "vitest run",
     "prepare": "husky install",
     "backup:run": "tsx scripts/backup.ts | cat",
-    "postinstall": "prisma generate && prisma migrate deploy"
+    "postinstall": "prisma generate && (prisma migrate deploy || prisma db push)"
   },
   "engines": {
     "node": ">=18.18.0"
