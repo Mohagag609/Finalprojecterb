@@ -4,12 +4,7 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "18.20.0"
-
-[functions]
-  node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client", "prisma"]
-  included_files = ["prisma/schema.prisma"]
+  NODE_VERSION = "20.15.1"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
