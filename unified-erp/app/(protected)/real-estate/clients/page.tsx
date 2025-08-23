@@ -5,8 +5,13 @@ async function fetchClients(searchParams: { q?: string; page?: string; size?: st
   const q = searchParams.q || '';
   const page = parseInt(searchParams.page || '1');
   const size = parseInt(searchParams.size || '10');
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/real-estate/clients?q=${encodeURIComponent(q)}&page=${page}&size=${size}`, { cache: 'no-store' });
-  return res.json();
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/real-estate/clients?q=${encodeURIComponent(q)}&page=${page}&size=${size}`, { cache: 'no-store' });
+    if (!res.ok) return { items: [], total: 0, page, size };
+    return res.json();
+  } catch {
+    return { items: [], total: 0, page, size };
+  }
 }
 
 export default async function ClientsPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
