@@ -1,5 +1,4 @@
-import DataTable from '@/components/datatable/data-table';
-import { buildColumns } from '@/components/datatable/columns';
+import UnitsTable from '@/components/datatable/units-table';
 
 async function fetchUnits(searchParams: { q?: string; page?: string; size?: string } = {}) {
   const q = searchParams.q || '';
@@ -16,13 +15,6 @@ async function fetchUnits(searchParams: { q?: string; page?: string; size?: stri
 
 export default async function UnitsPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
   const { items } = await fetchUnits((searchParams as any) || {});
-  const columns = buildColumns<any>([
-    { key: 'code', header: 'الكود' },
-    { key: 'type', header: 'النوع' },
-    { key: 'area', header: 'المساحة' },
-    { key: 'price', header: 'السعر' },
-    { key: 'status', header: 'الحالة' }
-  ]);
 
   return (
     <div className="p-6 space-y-4">
@@ -39,7 +31,7 @@ export default async function UnitsPage({ searchParams }: { searchParams?: { [ke
         </select>
         <button type="submit" className="bg-primary text-primary-foreground rounded px-3">إضافة</button>
       </form>
-      <DataTable columns={columns} data={items} />
+      <UnitsTable items={items} />
     </div>
   );
 }
