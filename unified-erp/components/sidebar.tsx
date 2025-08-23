@@ -2,6 +2,19 @@ import Link from 'next/link';
 
 const links = [
   { href: '/dashboard', label: 'لوحة التحكم' },
+  { href: '/real-estate/clients', label: 'العملاء' },
+  { href: '/real-estate/units', label: 'الوحدات' },
+  { href: '/accounting/cashboxes', label: 'الخزن' },
+  { href: '/accounting/vouchers', label: 'السندات' },
+  { href: '/accounting/transfers', label: 'تحويلات' },
+  { href: '/accounting/invoices', label: 'الفواتير' },
+  { href: '/accounting/bank-imports', label: 'كشف البنك' },
+  { href: '/accounting/journal', label: 'دفتر القيود' },
+  { href: '/projects/projects', label: 'المشروعات' },
+  { href: '/projects/phases', label: 'المراحل' },
+  { href: '/projects/materials', label: 'المواد' },
+  { href: '/projects/material-moves', label: 'حركات مواد' },
+  { href: '/settlements/partner', label: 'تسوية شركاء' },
   { href: '/reports', label: 'التقارير' },
   { href: '/settings', label: 'الإعدادات' }
 ];
