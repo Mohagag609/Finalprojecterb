@@ -15,7 +15,14 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const data = await req.json();
+  let data: any;
+  const ct = req.headers.get('content-type') || '';
+  if (ct.includes('application/json')) {
+    data = await req.json();
+  } else {
+    const fd = await req.formData();
+    data = Object.fromEntries(fd.entries());
+  }
   const created = await prisma.client.create({ data });
   return NextResponse.json(created);
 }

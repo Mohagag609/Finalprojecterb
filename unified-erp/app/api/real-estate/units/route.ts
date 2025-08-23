@@ -15,7 +15,16 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const data = await req.json();
+  let data: any;
+  const ct = req.headers.get('content-type') || '';
+  if (ct.includes('application/json')) {
+    data = await req.json();
+  } else {
+    const fd = await req.formData();
+    data = Object.fromEntries(fd.entries());
+  }
+  if (data.area != null) data.area = Number(data.area);
+  if (data.price != null) data.price = Number(data.price);
   const created = await prisma.unit.create({ data });
   return NextResponse.json(created);
 }
