@@ -20,8 +20,8 @@
     "postinstall": "prisma generate && (prisma migrate deploy || prisma db push)"
   },
   "engines": {
-  "node": "20"
-  }
+    "node": "20.x"
+  },
   "dependencies": {
     "@prisma/client": "^5.18.0",
     "@tanstack/react-table": "^8.20.5",
