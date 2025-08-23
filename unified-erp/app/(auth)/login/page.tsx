@@ -12,7 +12,7 @@ async function loginAction(formData: FormData) {
 export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <form action={loginAction} className="w-full max-w-sm space-y-4 bg-card p-6 rounded-lg shadow">
+      <form action="/login/submit" method="post" className="w-full max-w-sm space-y-4 bg-card p-6 rounded-lg shadow">
         <h1 className="text-xl font-bold text-center">تسجيل الدخول</h1>
         <div className="space-y-2">
           <label className="block text-sm">البريد الإلكتروني</label>
