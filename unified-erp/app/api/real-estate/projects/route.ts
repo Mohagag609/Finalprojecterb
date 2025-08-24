@@ -30,3 +30,33 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 });
   }
 }
+
+export async function POST(req: Request) {
+  try {
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const data = await req.json();
+    
+    const project = await prisma.project.create({
+      data: {
+        code: data.code,
+        name: data.name,
+        type: data.type,
+        location: data.location,
+        totalUnits: data.totalUnits,
+        status: data.status,
+        startDate: data.startDate,
+        endDate: data.endDate,
+        description: data.description,
+      },
+    });
+
+    return NextResponse.json(project);
+  } catch (error) {
+    console.error('Error creating project:', error);
+    return NextResponse.json({ error: 'Failed to create project' }, { status: 500 });
+  }
+}
